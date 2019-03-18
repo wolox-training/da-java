@@ -1,5 +1,6 @@
 package wolox.training.controller;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
@@ -59,6 +60,12 @@ public class BookController {
             .orElseThrow(BookNotFoundException::new);
         return bookRepository.save(book);
     }
+
+    @GetMapping
+    public List<Book> getAll() {
+        return bookRepository.findAll();
+    }
+
 
 
 
