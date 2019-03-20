@@ -35,7 +35,6 @@ public class BookController {
 
     @GetMapping("/{id}")
     public Book findOne(@PathVariable Long id) {
-        Optional<Book> book = bookRepository.findById(id);
         return bookRepository.findById(id)
             .orElseThrow(BookNotFoundException::new);
     }

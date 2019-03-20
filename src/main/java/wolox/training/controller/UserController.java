@@ -39,13 +39,12 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public User create(@RequestBody User user) {
-        User userSaved = userRepository.save(user);
-        return userSaved;
+        return userRepository.save(user);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        User user = userRepository.findById(id)
+        userRepository.findById(id)
             .orElseThrow(UserNotFoundException::new);
         userRepository.deleteById(id);
     }
