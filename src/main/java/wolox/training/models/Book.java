@@ -1,8 +1,8 @@
 package wolox.training.models;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -48,7 +48,7 @@ public class Book {
     private String isbn;
 
     @ManyToMany(mappedBy = "books")
-    private List<User> users;
+    private List<User> users = new ArrayList<>();
 
     public long getId() {
         return id;
@@ -131,7 +131,7 @@ public class Book {
     }
 
     public List<User> getUsers() {
-        return (List<User>) Collections.unmodifiableCollection(users);
+        return (List<User>) Collections.unmodifiableList(users);
     }
 
     public void setUsers(List<User> users) {

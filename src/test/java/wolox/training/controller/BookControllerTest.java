@@ -2,6 +2,7 @@ package wolox.training.controller;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -13,7 +14,6 @@ import java.util.Optional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -21,6 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import wolox.training.models.Book;
 import wolox.training.repositories.BookRepository;
+import wolox.training.utils.Utils;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(BookController.class)
@@ -33,6 +34,8 @@ public class BookControllerTest {
     @MockBean
     private BookRepository bookRepository;
 
+    @MockBean
+    private Book book;
 
     private Book getBook(){
         Book book = new Book();
@@ -75,20 +78,30 @@ public class BookControllerTest {
         Book book = getBook();
 
         mvc.perform(post("/api/books")
-            .contentType(MediaType.APPLICATION_JSON))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(Utils.asJsonString(book)))
             .andExpect(status().isCreated());
     }
 
-
-
     @Test
     public void notCreateTest() throws Exception {
-        Book book = new Book();
-        book.setTitle("title");
-
         mvc.perform(post("/api/books")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void deleteTest() throws Exception {
+        given(book.getId()).willReturn(1l);
+        given(bookRepository.findById(book.getId())).willReturn(Optional.of(book));
+        mvc.perform(delete("/api/books/{id}", book.getId()))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    public void notFoundDeleteTest() throws Exception {
+        mvc.perform(delete("/api/books/{id}", 0l))
+            .andExpect(status().isNotFound());
     }
 }
 

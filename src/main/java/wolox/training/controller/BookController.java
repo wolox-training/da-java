@@ -1,6 +1,7 @@
 package wolox.training.controller;
 
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
@@ -34,6 +35,7 @@ public class BookController {
 
     @GetMapping("/{id}")
     public Book findOne(@PathVariable Long id) {
+        Optional<Book> book = bookRepository.findById(id);
         return bookRepository.findById(id)
             .orElseThrow(BookNotFoundException::new);
     }
@@ -52,7 +54,7 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public Book updateBook(@RequestBody Book book, @PathVariable Long id) {
+    public Book update(@RequestBody Book book, @PathVariable Long id) {
         if (book.getId() != id) {
             throw new BookIdMismatchException();
         }
@@ -65,8 +67,4 @@ public class BookController {
     public List<Book> getAll() {
         return bookRepository.findAll();
     }
-
-
-
-
 }

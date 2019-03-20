@@ -3,8 +3,6 @@ package wolox.training.models;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -26,7 +24,6 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-
 
     @Column(nullable = false)
     private String name;
@@ -73,7 +70,7 @@ public class User {
     }
 
     public Set<Book> getBooks() {
-        return (Set<Book>) Collections.unmodifiableCollection(books);
+        return (Set<Book>) Collections.unmodifiableSet(books);
     }
 
     public void setBooks(Set<Book> books) {

@@ -1,5 +1,6 @@
 package wolox.training.controller;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,18 +39,19 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public User create(@RequestBody User user) {
-        return userRepository.save(user);
+        User userSaved = userRepository.save(user);
+        return userSaved;
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        userRepository.findById(id)
+        User user = userRepository.findById(id)
             .orElseThrow(UserNotFoundException::new);
         userRepository.deleteById(id);
     }
 
     @PutMapping("/{id}")
-    public User updateBook(@RequestBody User user, @PathVariable Long id) {
+    public User update(@RequestBody User user, @PathVariable Long id) {
         if (user.getId() != id) {
             throw new UserIdMismatchException("Not found a user with id");
         }
@@ -78,5 +80,8 @@ public class UserController {
         userRepository.save(user);
     }
 
-
+    @GetMapping
+    public List<User> getAll() {
+        return userRepository.findAll();
+    }
 }
