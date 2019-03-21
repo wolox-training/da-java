@@ -1,5 +1,6 @@
 package wolox.training.models;
 
+import com.google.common.base.Preconditions;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashSet;
@@ -21,6 +22,9 @@ public class User {
     public User(){
 
     }
+
+    public static String preconditionEmptyMessage = "for an user cant be null or empty";
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -50,6 +54,8 @@ public class User {
     }
 
     public void setName(String name) {
+        Preconditions.checkArgument(name != null && !name.isEmpty(),
+            "The name for an user " + User.preconditionEmptyMessage);
         this.name = name;
     }
 
@@ -58,6 +64,8 @@ public class User {
     }
 
     public void setUserName(String userName) {
+        Preconditions.checkArgument(userName != null && !userName.isEmpty(),
+            "The username for an user " + User.preconditionEmptyMessage);
         this.userName = userName;
     }
 
@@ -66,6 +74,8 @@ public class User {
     }
 
     public void setBirthDate(LocalDate birthDate) {
+        Preconditions.checkNotNull(birthDate,
+            "The birth date for an user cant be null");
         this.birthDate = birthDate;
     }
 

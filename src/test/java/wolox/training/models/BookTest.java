@@ -54,4 +54,10 @@ public class BookTest {
         Optional<Book> bookInDb = bookRepository.findById(book.getId());
         assert (newIsbn).equals(bookInDb.get().getIsbn());
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void notCreateTest() {
+        Book book = new Book();
+        bookRepository.save(book);
+    }
 }
