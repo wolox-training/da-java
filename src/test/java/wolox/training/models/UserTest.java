@@ -50,4 +50,13 @@ public class UserTest {
         Optional<User> userInDB = userRepository.findById(userSaved.getId());
         assert (newName).equals(userInDB.get().getName());
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void notCreateTest() {
+        User user = new User();
+        user.setUserName("Cristian Test");
+        user.setName(null);
+        user.setBirthDate(null);
+        userRepository.save(user);
+    }
 }
