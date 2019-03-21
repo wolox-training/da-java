@@ -1,5 +1,6 @@
 package wolox.training.controller;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -49,7 +50,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public User updateBook(@RequestBody User user, @PathVariable Long id) {
+    public User update(@RequestBody User user, @PathVariable Long id) {
         if (user.getId() != id) {
             throw new UserIdMismatchException("Not found a user with id");
         }
@@ -78,5 +79,8 @@ public class UserController {
         userRepository.save(user);
     }
 
-
+    @GetMapping
+    public List<User> getAll() {
+        return userRepository.findAll();
+    }
 }
