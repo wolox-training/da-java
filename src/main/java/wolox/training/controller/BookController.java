@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import wolox.training.exceptions.BookIdMismatchException;
 import wolox.training.exceptions.BookNotFoundException;
 import wolox.training.models.Book;
 import wolox.training.repositories.BookRepository;
+import wolox.training.services.OpenLibraryService;
 
 @RestController
 @RequestMapping("/api/books")
@@ -65,5 +67,21 @@ public class BookController {
     @GetMapping
     public List<Book> getAll() {
         return bookRepository.findAll();
+    }
+
+    @GetMapping("isbn/{isbn}")
+    public ResponseEntity<Book> findByIsbn(@PathVariable String isbn) {
+        Book requestedBook = bookRepository.findByIsbn(isbn);
+        if (requestedBook == null) {
+            OpenLibraryService openLibraryService = new OpenLibraryService();
+            requestedBook = openLibraryService.bookInfo(isbn);
+            if (requestedBook == null) {
+                return new ResponseEntity(
+                    System.getenv("There is no book with that ISBN"),
+                    HttpStatus.BAD_REQUEST);
+            }
+            bookRepository.save(requestedBook);
+        }
+        return new ResponseEntity<>(requestedBook, HttpStatus.OK);
     }
 }

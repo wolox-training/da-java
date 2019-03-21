@@ -96,7 +96,7 @@ public class Book {
     }
 
     public void setTitle(String title) {
-        Preconditions.checkArgument(genre != null && !genre.isEmpty(),
+        Preconditions.checkArgument(title != null && !title.isEmpty(),
             "The title " + Book.preconditionEmptyMessage);
         this.title = title;
     }
