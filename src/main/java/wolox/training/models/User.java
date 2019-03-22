@@ -1,5 +1,7 @@
 package wolox.training.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -13,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import wolox.training.exceptions.BookAlreadyOwnedException;
 
 @Entity
@@ -40,6 +43,11 @@ public class User {
 
     @ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.MERGE})
     private Set<Book> books = new HashSet();
+
+    @Column(nullable = false)
+    private String password;
+
+    private String role = "USER";
 
     public long getId() {
         return id;
@@ -97,6 +105,16 @@ public class User {
     public boolean removeBook(Book book) {
         return this.books.remove(book);
     }
+    
+    @JsonIgnore
+    public String getPassword() {
+        return password;
+    }
+
+    @JsonProperty
+    public void setPassword(String password) {
+        this.password = new BCryptPasswordEncoder().encode(password);
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -108,5 +126,17 @@ public class User {
         }
         User user = (User) o;
         return id == user.id;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public boolean validatePassword(String password) {
+        return new BCryptPasswordEncoder().matches(password, this.password);
     }
 }
