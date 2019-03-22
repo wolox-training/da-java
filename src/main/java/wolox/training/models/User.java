@@ -116,6 +116,14 @@ public class User {
         this.password = new BCryptPasswordEncoder().encode(password);
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = new BCryptPasswordEncoder().encode(password);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
