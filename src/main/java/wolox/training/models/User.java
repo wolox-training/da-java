@@ -1,5 +1,7 @@
 package wolox.training.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -103,11 +105,13 @@ public class User {
     public boolean removeBook(Book book) {
         return this.books.remove(book);
     }
-
+    
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
 
+    @JsonProperty
     public void setPassword(String password) {
         this.password = new BCryptPasswordEncoder().encode(password);
     }
