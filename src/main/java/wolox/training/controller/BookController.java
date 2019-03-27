@@ -84,4 +84,14 @@ public class BookController {
         }
         return new ResponseEntity<>(requestedBook, HttpStatus.OK);
     }
+
+    @GetMapping("/findbypublisherandgenreyear")
+    public List<Book> findByPublisherAndGenreAndYear(
+        @RequestParam(name = "publisher", defaultValue = "") String publisher,
+        @RequestParam(name = "genre", defaultValue = "") String genre,
+        @RequestParam(name = "year", defaultValue = "") String year) {
+        List<Book> books = bookRepository
+            .findByPublisherAndGenreAndYear(publisher, genre, year);
+        return books;
+    }
 }
